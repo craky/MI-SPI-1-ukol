@@ -1,14 +1,17 @@
 # http://en.wikipedia.org/wiki/Exponential_distribution#Generating_exponential_variates
 K = 5 # jmeno
-L = 6 # prijmeni
+L = 9 # prijmeni
 n = K*20
-u=runif(n, min=0, max=1) # Generuje rovnoměrné rozdělení
+u=runif(n, min=0, max=1) # Generuje n náhodných hodnot z UNIF(0,1)
 x=-log(1-u)/L # Exp rozdělení z rovnoměrného inverzní distr. fcí.
 
 #################################################################
 # 1.2
 #hist(u)
 hist(x, breaks=5*K, freq=FALSE) # Histogram našich hodnot
+#help(hist) freq --> logical;
+#if TRUE, the histogram graphic is a representation of frequencies, the counts component of the result;
+#if FALSE, probability densities, component density, are plotted (so that the histogram has a total area of one).
 xWidth=max(x)-min(x) # Rozpětí hodnot
 xGrid=seq(min(x)-0.2*xWidth,max(x)+0.2*xWidth,length=30) # vytvoří hodnoty kvantilů (?)
 lines (xGrid,dexp(xGrid, rate=L), col='red') # přiloží graf hustoty k histogramu
@@ -20,9 +23,10 @@ lines (xGrid,pexp(xGrid, rate = L), col='red')  # přiloží graf teoretické fc
 
 ################################################################
 # 1.4
-y=rexp(1000, rate=L)
+y=rexp(1000, rate=L) # hodnoty ze stejného rozdělení jako se kterým porovnáváme
 qqplot(x, y)
 abline(0,1, col='red', lwd=2)
+#Pokud jsou hodnoty obou rozdělení stejné, ležely by na červená čáře. Hodnoty nejdál od čáry se nejvíce vychylují.
 
 ###############################################################
 # 2.1
@@ -34,12 +38,12 @@ plot (t,lambda(t), lty="solid", lwd=3, type='l')   # Vykreslení lambdy (type je
 ###############################################################
 # 2.2
 # Sestrojíme K*10 hodnot z exp rozdělení pro dané lambda
-
 event = numeric(K*10)             # Pole událostí
 delta = 1 / 1000                  # Delta t
 tau   = 0                         # Aktuální bod na časové ose
 i     = 1                         # Index
 
+# Cyklus simuluje ubíhající čas (po skocích delta) a na základě funkce lambda generuje příchod zákazníka
 while (i<=K*10) {
   current_time = tau %/% 1        # Přiřadíme t dolní celou část tau 
   tau = tau + delta               # Tau zvýšíme o delta t
@@ -56,12 +60,14 @@ plot (event, eventGrid)           # Vykreslení grafu časů příchodů
 #################################################################
 # 2.3
 
-per_minute = numeric(24*60)       # Vektor uschovávající počet příchodů za minutu
+per_minute = numeric(24*(60))    # Vektor uschovávající počet příchodů za minutu
 delta      = 1 / 1000             # Delta t
 j          = 0                    # Index
 tau        = 0                    # Aktuální bod na časové ose
 
 # Bacha běží to fakt dlouho, nezvyšujte moc deltu !!!
+# Cyklus simuluje ubíhající čas (po skocích delta) a zvyšuje četnost příchodu na základě fce lambda
+# Četnost výskytů se akumuluje do "binů" šířky jedné minuty
 while (j<24*60) {
   j = tau %/% 1                   # Přiřadíme j dolní celou část tau 
   tau = tau + delta               # Tau zvýšíme o delta t
@@ -71,7 +77,7 @@ while (j<24*60) {
   }
 }
 
-write(per_minute2, file = "per_minute.txt", ncolumns = 1, append = FALSE)
+write(per_minute, file = "per_minute.txt", ncolumns = 1, append = FALSE)
 
 # Doporučovaný histogram nepotřebuju, mám hodnoty v per_minute
 plot (t,per_minute, lwd=1, type='l')   # Vykreslí experimentálně zjištěná data
@@ -85,6 +91,7 @@ kuryr = K/(K+L)                   # Pravděpodobnost, že si vezmou kurýra
 per_minute_kuryr = numeric(24*60) # Vektor uschovávající počet odvozů kurýrem
 
 i = 1                             # Index
+# Cyklus prochází všechny minutové výskyty a spočíta pravděpodobnosti, že zákazník použije kurýra
 while (i<=24*60) {
   j = 1                           # Index
   while (j<=per_minute[i]) {
