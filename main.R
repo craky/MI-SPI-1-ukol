@@ -1,19 +1,23 @@
 # http://en.wikipedia.org/wiki/Exponential_distribution#Generating_exponential_variates
-K = 5 # jmeno
-L = 9 # prijmeni
+K = nchar('Tomas') # jmeno
+L = nchar('Nesrovnal') # prijmeni
+
+#################################################################
+# 1
+
 n = K*20
 u=runif(n, min=0, max=1) # Generuje n náhodných hodnot z UNIF(0,1)
 x=-log(1-u)/L # Exp rozdělení z rovnoměrného inverzní distr. fcí.
 
 #################################################################
 # 1.2
-#hist(u)
+hist(u, freq=FALSE)
 hist(x, breaks=5*K, freq=FALSE) # Histogram našich hodnot
 #help(hist) freq --> logical;
 #if TRUE, the histogram graphic is a representation of frequencies, the counts component of the result;
 #if FALSE, probability densities, component density, are plotted (so that the histogram has a total area of one).
 xWidth=max(x)-min(x) # Rozpětí hodnot
-xGrid=seq(min(x)-0.2*xWidth,max(x)+0.2*xWidth,length=30) # vytvoří hodnoty kvantilů (?)
+xGrid=seq(min(x)-0.2*xWidth,max(x)+0.2*xWidth,length=n) # vytvoří hodnoty kvantilů (?)
 lines (xGrid,dexp(xGrid, rate=L), col='red') # přiloží graf hustoty k histogramu
 
 ################################################################
@@ -23,39 +27,55 @@ lines (xGrid,pexp(xGrid, rate = L), col='red')  # přiloží graf teoretické fc
 
 ################################################################
 # 1.4
-y=rexp(1000, rate=L) # hodnoty ze stejného rozdělení jako se kterým porovnáváme
+y=rexp(n, rate=L) # hodnoty ze stejného rozdělení jako se kterým porovnáváme
 qqplot(x, y)
 abline(0,1, col='red', lwd=2)
-#Pokud jsou hodnoty obou rozdělení stejné, ležely by na červená čáře. Hodnoty nejdál od čáry se nejvíce vychylují.
+#Pokud jsou hodnoty obou rozdělení stejné, ležely by na červené čáře. Hodnoty nejdál od čáry se nejvíce vychylují.
+
+################################################################
+# 1.5
+
+################################################################
+# 1.6
+
+chisq.test(x, p=y/sum(y)) 
+
+# Chi-squared test for given probabilities
+# data:  x
+# X-squared = 58.0799, df = 99, p-value = 0.9997
+# Warning message:
+# In chisq.test(x, p = y/sum(y)) : Chi-squared approximation may be incorrect
+
+#TODO: najit ks.test a zkusit to podle toho
 
 ###############################################################
 # 2.1
-lambda = function(t) { 100 + 50*exp(-(t - 420)^2/(3600*L)) + 100*exp(-(L*(-30*L+t-480)^2)/360000)}
-t=seq(0,24*60-1)                                   #Počet minut ve dnu, počítáno od nuly
-# !!! V zadání je 50*exp, v příkladu je 50/exp !!!
-plot (t,lambda(t), lty="solid", lwd=3, type='l')   # Vykreslení lambdy (type je malý L, ne jednička)
 
+# opsano z eduxu: 2.I
+lambda = function(t){100+50*exp(-(t-420)^2/(3600*L))+100*exp(-(L*(-30*L+t-480)^2)/360000)}
+# prvni perioda
+t=seq(0,24*60-1)
+#TODO: popsat osu v levo
+plot(t,lambda(t),lty="solid",lwd=3,type='l', main="Intenzita přístupů za den")
 ###############################################################
 # 2.2
-# Sestrojíme K*10 hodnot z exp rozdělení pro dané lambda
-event = numeric(K*10)             # Pole událostí
-delta = 1 / 1000                  # Delta t
-tau   = 0                         # Aktuální bod na časové ose
-i     = 1                         # Index
 
-# Cyklus simuluje ubíhající čas (po skocích delta) a na základě funkce lambda generuje příchod zákazníka
-while (i<=K*10) {
-  current_time = tau %/% 1        # Přiřadíme t dolní celou část tau 
-  tau = tau + delta               # Tau zvýšíme o delta t
-  rand = runif(1, min=0, max=1)   # Náhodná hodnota
-  if (rand < lambda(current_time) * delta) {
-    event[i] = tau                # S danou pravděpodobností nastane událost
+p = K*10 # prichod
+event = numeric(p) #array TODO: prejmenovat
+s = 10^-6 # step TODO: vypocitat z lamdy
+t = 0 # time = Aktuální čas
+i = 0 # iterator
+
+# Cyklus simuluje ubíhající čas (po skocích delta) a na základě
+# funkce lambda generuje příchod zákazníka
+while(i < p) {
+  if (runif(1, min=0, max=1) < lambda(t) * s) {
+    event[i] = t # oznacime cas udalosti
     i = i + 1                     # Zvýšíme index
   }
-}
-
-eventGrid = numeric(K*10)         # Mřížka nul pro vykreslení grafu
-plot (event, eventGrid)           # Vykreslení grafu časů příchodů
+  t = t + s
+} 
+plot(event, numeric(p))
 
 #################################################################
 # 2.3
