@@ -71,7 +71,7 @@ abline(h = 0, v = 24*120)
 
 p = K*10 # prichod
 event = numeric(p) #array TODO: prejmenovat
-s = 10^-4 # step TODO: vypocitat z lamdy
+s = 10^-(2.4) # step
 t = 0 # time = Aktuální čas
 i = p # iterator
 
@@ -89,34 +89,29 @@ plot(event, numeric(p))
 #################################################################
 # 2.3
 
-t=seq(0,(24*60)-1)
-per_minute = numeric(24*(60))    # Vektor uschovávající počet příchodů za minutu
-delta      = 1 / 1000             # Delta t
-j          = 0                    # Index
-tau        = 0                    # Aktuální bod na časové ose
-
-# Bacha běží to fakt dlouho, nezvyšujte moc deltu !!!
-# Cyklus simuluje ubíhající čas (po skocích delta) a zvyšuje četnost příchodu na základě fce lambda
-# Četnost výskytů se akumuluje do "binů" šířky jedné minuty
-while (j<24*60) {
-  j = tau %/% 1                   # Přiřadíme j dolní celou část tau 
-  tau = tau + delta               # Tau zvýšíme o delta t
-  rand = runif(1, min=0, max=1)   # Náhodná hodnota
-  if (rand < lambda(j) * delta) { # S danou pravděpodobností nastane událost
-    per_minute[j+1] = per_minute[j+1] + 1
+day = 24*60
+cetnosti_za_minutu = numeric(day) # pro cely den
+day_seq = seq(0,day-1)
+`+<-` <- `+`
+t = 0
+while (t < day) {
+  if (runif(1, min=0, max=1) < lambda(t) * s) {
+    `+`(cetnosti_za_minutu[(t %/% 1)+1])<-1
   }
+  t = t + s
 }
 
-write(per_minute, file = "per_minute.txt", ncolumns = 1, append = FALSE)
+# edux style - nefunguje to a chce se mi brecet
+h = hist(cetnosti_za_minutu, plot=FALSE, breaks=seq(0,300))
+plot(h$mids, h$counts, type="l")
+lines(day_seq,lambda(day_seq), lwd=3, col='red')
 
-# Doporučovaný histogram nepotřebuju, mám hodnoty v per_minute
-plot (t,per_minute, lwd=1, type='l',
+# fitwiki style
+plot(day_seq, cetnosti_za_minutu, lwd=1, type='l',
       main="Četnosti příchodů za celý den",
       ylab="Příchody za minutu",
-      xlab="Čas t v minutách")   # Vykreslí experimentálně zjištěná data
-lines (t,lambda(t), lwd=3, col='red')  # Přiloží graf teoretické fce
-
-
+      xlab="Čas t v minutách")
+lines(day_seq,lambda(day_seq), lwd=3, col='red')
 
 ############################################################################
 # 3
