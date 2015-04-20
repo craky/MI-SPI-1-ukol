@@ -51,27 +51,36 @@ chisq.test(x, p=y/sum(y))
 ###############################################################
 # 2.1
 
-# opsano z eduxu: 2.I
-lambda = function(t){100+50*exp(-(t-420)^2/(3600*L))+100*exp(-(L*(-30*L+t-480)^2)/360000)}
+lambda = function(t){100+50*exp(-(t-420)^2/(3600*L))+100*
+                       exp(-(L*(-30*L+t-480)^2)/360000)}
 # prvni perioda
-t=seq(0,24*60-1)
+t=seq(0,3*(24*60)-1)
 #TODO: popsat osu v levo
-plot(t,lambda(t),lty="solid",lwd=3,type='l', main="Intenzita přístupů za den")
+plot(t,lambda(t%%(24*60)),lty="solid",lwd=3,type='l',
+     main="Intenzita přístupů za den",
+     ylab="Příchody za minutu",
+     xlab="Čas t v minutách")
+text(0, 200, "Den 1", cex=0.6, pos=4)
+text(24*60, 200, "Den 2", cex=0.6, pos=4)
+text(24*120, 200, "Den 3", cex=0.6, pos=4)
+abline(h = 0, v = 01)
+abline(h = 0, v = 24*60)
+abline(h = 0, v = 24*120)
 ###############################################################
 # 2.2
 
 p = K*10 # prichod
 event = numeric(p) #array TODO: prejmenovat
-s = 10^-6 # step TODO: vypocitat z lamdy
+s = 10^-4 # step TODO: vypocitat z lamdy
 t = 0 # time = Aktuální čas
-i = 0 # iterator
+i = p # iterator
 
 # Cyklus simuluje ubíhající čas (po skocích delta) a na základě
 # funkce lambda generuje příchod zákazníka
-while(i < p) {
+while (0 < i) {
   if (runif(1, min=0, max=1) < lambda(t) * s) {
+    i = i - 1
     event[i] = t # oznacime cas udalosti
-    i = i + 1                     # Zvýšíme index
   }
   t = t + s
 } 
@@ -80,6 +89,7 @@ plot(event, numeric(p))
 #################################################################
 # 2.3
 
+t=seq(0,(24*60)-1)
 per_minute = numeric(24*(60))    # Vektor uschovávající počet příchodů za minutu
 delta      = 1 / 1000             # Delta t
 j          = 0                    # Index
