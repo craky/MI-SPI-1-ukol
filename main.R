@@ -110,7 +110,10 @@ while (j<24*60) {
 write(per_minute, file = "per_minute.txt", ncolumns = 1, append = FALSE)
 
 # Doporučovaný histogram nepotřebuju, mám hodnoty v per_minute
-plot (t,per_minute, lwd=1, type='l')   # Vykreslí experimentálně zjištěná data
+plot (t,per_minute, lwd=1, type='l',
+      main="Četnosti příchodů za celý den",
+      ylab="Příchody za minutu",
+      xlab="Čas t v minutách")   # Vykreslí experimentálně zjištěná data
 lines (t,lambda(t), lwd=3, col='red')  # Přiloží graf teoretické fce
 
 
