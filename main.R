@@ -164,9 +164,9 @@ while (0 < m) { # pro kazdou minutu po cely den
     if(runif(1,min=0,max=1)<vezme_kuryra){ # zvoli kuryra?
       `+`(za_minutu_kuryr[m])<-1
     }
-    `-`(o)<-1
+    `-`(o)<-1 # o--
   }
-  `-`(m)<-1
+  `-`(m)<-1 # m--
 }
 za_minutu_posta=cetnosti_za_minutu-za_minutu_kuryr
 plot(day_seq,za_minutu_kuryr,lwd=1,col='lightgreen',type='l',

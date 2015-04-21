@@ -6,6 +6,7 @@
 \usepackage{titlesec}
 \usepackage{listings}
 \usepackage{color}
+\usepackage[latin2]{inputenc}
 
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
@@ -24,8 +25,8 @@
   frame=single,                    % adds a frame around the code
   keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
   keywordstyle=\color{blue},       % keyword style
-  language=R,                 % the language of the code
-  otherkeywords={*,...},            % if you want to add more keywords to the set
+  language=R,                      % the language of the code
+  otherkeywords={*,...},           % if you want to add more keywords to the set
   numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
   numbersep=5pt,                   % how far the line-numbers are from the code
   numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
@@ -36,7 +37,11 @@
   stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
   stringstyle=\color{mymauve},     % string literal style
   tabsize=2,                       % sets default tabsize to 2 spaces
-  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+  texcl=true,
+  title=\lstname,                  % show the filename of files included with \lstinputlisting; also try caption instead of title
+  %inputencoding=utf8,
+  %extendedchars=true,
+  %literate={á}{{\'a}}1 {{Á}{{\'A}}1 é}{{\'e}}1 {š}{{\~s}}1
 }
 
 \defaultfontfeatures{Ligatures=TeX}
@@ -202,4 +207,49 @@ Zatim nic
 	\label{obr:sikme}
 \end{figure}
 \subsection{Diskuze kvality vygenerovaných dat}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{ Simulace internetového obchodu s tokem nákupů dle nehomogenního Poissonova procesu}
+\subsection{Intenzita příchodů požadavků na server}
+\begin{lstlisting}[frame=single]  % start your code-block
+
+vezme_kuryra=K/(K+L)  # Ze všech zákazníků K/(K+L) použije kurýrní službu
+za_minutu_kuryr=numeric(day) 
+# Cyklus prochází všechny minutové výskyty a spočíta pravděpodobnosti,
+# že zákazník použije kurýra
+m=day
+while (0 < m) { # pro kazdou minutu po cely den
+  o=cetnosti_za_minutu[m] # pocet objednavek za minutu m
+  while(0<o){ # pro vsechny objednavky za tu minutu
+    if(runif(1,min=0,max=1)<vezme_kuryra){ # zvoli kuryra?
+      `+`(za_minutu_kuryr[m])<-1
+    }
+    `-`(o)<-1
+  }
+  `-`(m)<-1
+}
+za_minutu_posta=cetnosti_za_minutu-za_minutu_kuryr
+plot(day_seq,za_minutu_kuryr,lwd=1,col='lightgreen',type='l',
+     ylim=c(10,150),
+     main="Způsoby dodávky",
+     ylab="Četnosti příchodů objednávek",
+     xlab="Čas t v minutách")
+lines(day_seq,lamda_day_seq*vezme_kuryra,lwd=3,col='green')
+lines(day_seq,za_minutu_posta,lwd=1, col='lightpink',type='l')
+# pravdepodovnost, ze vezmou postu je doplnkem k tomu,
+# ze vezmou kuryra
+lines(day_seq,lamda_day_seq*(1-vezme_kuryra),lwd=3,col='red')
+legend(x=1200,y=150,c("kurýr","pošta"),cex=.8, 
+       col=c("green","red"),lty=c(1,1))
+\end{lstlisting}
+\begin{figure}[ht!]
+	\includegraphics[scale=0.6]{img/3_zpusoby_dodavky}\centering
+	\caption{Způsoby dodávky za den}
+	\label{obr:sikme}
+\end{figure}
 \end{document}
