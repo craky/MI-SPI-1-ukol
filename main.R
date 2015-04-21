@@ -115,20 +115,20 @@ while (0 < t) {
 #EDUX STYLE
 #MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 lambda = function(t){100+50*exp(-(t-420)^2/(3600*L))+100*
-                       exp(-(L*(-30*L+t-480)^2)/360000)}
+                     exp(-(L*(-30*L+t-480)^2)/360000)}
 intensity = max(lambda(day_seq)) # najdeme intenzitu
 arrivals = NULL;
 posledni_prichod = 0
-while (T < day) {
+while (posledni_prichod < day) {
   `+`(posledni_prichod)<-rexp(1, rate = intensity)
   if (runif(1, min=0, max=1) < (lambda (posledni_prichod) / intensity)){
-    arrivals = append(arrivals, posledni_prichod);
+    arrivals = append(arrivals, posledni_prichod)
   }
 }
 hi = hist(arrivals, plot=FALSE, breaks=day)
 plot(hi$counts[hi$mids], type="l", col='black',
-     xlab="Cas t (v minutach)",
-     ylab="Prichody za minutu")
+     xlab="Čas t (v minutach)",
+     ylab="Příchody za minutu")
 lines (day_seq, lambda(day_seq), type="l", lwd=3, col="red")
 
 #MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
