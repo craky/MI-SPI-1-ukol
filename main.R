@@ -10,7 +10,7 @@
 #################################################################
 # NASTAVENI PROMENNYCH K, L
 K=nchar('Tomas') # |jmeno|, K = 5
-L=nchar('Nesrovnal') # |prijmeni|, L =10
+L=nchar('Nesrovnal') # |prijmeni|, L = 10
 #################################################################
 # 1.1
 # http://en.wikipedia.org/wiki/Exponential_distribution#Generating_exponential_variates
@@ -19,32 +19,44 @@ u=runif(n, min=0, max=1) # Generuje n náhodných hodnot z UNIF(0,1)
 x=-log(1-u)/L # Exp rozdělení z rovnoměrného inverzní distr. fcí.
 #################################################################
 # 1.2
-hist(u,freq=FALSE,
-     main="TODO1",
-     ylab="TODO2",
-     xlab="TODO3")
-hist(x,breaks=5*K,freq=FALSE
-     main="TODO1",
-     ylab="TODO2",
-     xlab="TODO3") # Histogram našich hodnot
+hist(u,freq=FALSE)
+hist(x,breaks=5*K,freq=FALSE) # Histogram našich hodnot
 #help(hist) freq --> logical;
 #if TRUE, the histogram graphic is a representation of frequencies, the counts component of the result;
 #if FALSE, probability densities, component density, are plotted (so that the histogram has a total area of one).
 xWidth=max(x)-min(x) # Rozpětí hodnot
 xGrid=seq(min(x)-0.2*xWidth,max(x)+0.2*xWidth,length=n) # vytvoří hodnoty kvantilů (?)
-lines(xGrid,dexp(xGrid,rate=L),col="red") # přiloží graf hustoty k histogramu
+lines(xGrid,dexp(xGrid,rate=L),col="black",lty=2) # přiloží graf hustoty k histogramu
 ################################################################
 # 1.3 Opsáno ze zadáni, graf emp. exp. fce
 plot(ecdf(x),verticals=TRUE,do.points=FALSE,
+     lty=1,
+     col="black",
      main="Distribuční funkce",
      ylab="TODO4",
-     xlab="TODO5") 
-lines(xGrid,pexp(xGrid,rate=L),col="red")
+     xlab="TODO5")
+lines(xGrid,pexp(xGrid,rate=L),col="black",lty=2)
+legend(x=0.32,y=0.4,c("Distribuční funkce Exp(L)",
+       "Empirická distribuční funkce x"),
+       cex=.8, 
+       col=c("black","black"),
+       lty=c(1,2))
 ################################################################
 # 1.4
 y=rexp(n,rate=L) # hodnoty ze stejného rozdělení jako se kterým porovnáváme
-qqplot(x,y)
-abline(0,1,col="red",lwd=2)
+qqplot(x,y, main="Pravděpodobnostní papír (qqplot)",
+       ylab="Nový náhodný výběr z rozdělení",
+       xlab="Data x")
+abline(0,1,col="black",lwd=2,lty=1)
+legend(x=0,y=0.4,c("data",
+                      "náhodný výběr"),
+       cex=.8, 
+       col=c("black","black"),
+       lwd=1,
+       pch=c(NA,1),
+       lty=c(1,0),
+       merge=FALSE
+       )
 #Pokud jsou hodnoty obou rozdělení stejné, ležely by na červené čáře. Hodnoty nejdál od čáry se nejvíce vychylují.
 ################################################################
 # 1.5
@@ -62,9 +74,11 @@ chisq.test(x, p=y/sum(y))
 
 ###############################################################
 # 2.1
+lambda = function(t){100+50*exp(-(t-420)^2/(3600*L))+100*
+                     exp(-(L*(-30*L+t-480)^2)/360000)}
 day=24*60
 t=seq(0,3*day-1) # prvni perioda
-plot(t,lambda(t%%(24*60)),lty="solid",lwd=3,type="l",
+plot(t,lambda(t%%(day)),lty="solid",lwd=3,type="l",
      main="Intenzita přístupů za den",
      ylab="Příchody za minutu",
      xlab="Čas t v minutách")
@@ -141,7 +155,6 @@ lines(day_seq,lamda_day_seq, lwd=3, col='red')
 # 3
 vezme_kuryra=K/(K+L)  # Ze všech zákazníků K/(K+L) použije kurýrní službu
 za_minutu_kuryr=numeric(day) 
-za_minutu_posta=numeric(day)
 # Cyklus prochází všechny minutové výskyty a spočíta pravděpodobnosti,
 # že zákazník použije kurýra
 m=day
@@ -150,13 +163,12 @@ while (0 < m) { # pro kazdou minutu po cely den
   while(0<o){ # pro vsechny objednavky za tu minutu
     if(runif(1,min=0,max=1)<vezme_kuryra){ # zvoli kuryra?
       `+`(za_minutu_kuryr[m])<-1
-    }else{ # nebo postu?
-      `+`(za_minutu_posta[m])<-1
     }
     `-`(o)<-1
   }
   `-`(m)<-1
 }
+za_minutu_posta=cetnosti_za_minutu-za_minutu_kuryr
 plot(day_seq,za_minutu_kuryr,lwd=1,col='lightgreen',type='l',
      ylim=c(10,150),
      main="Způsoby dodávky",
