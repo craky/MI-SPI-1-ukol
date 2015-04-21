@@ -1,6 +1,5 @@
 `+<-` <- `+` # operator += 
 `-<-` <- `-` # operator -=
-`++=` <- `+` # operator += 
 
 #TODO: 1.6
 
