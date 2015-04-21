@@ -6,7 +6,7 @@
 \usepackage{titlesec}
 \usepackage{listings}
 \usepackage{color}
-\usepackage[latin2]{inputenc}
+%\usepackage[latin2]{inputenc}
 \usepackage{url}
 
 \definecolor{mygreen}{rgb}{0,0.6,0}
@@ -74,7 +74,11 @@ L = nchar('Nesrovnal') # prijmeni
 \end{lstlisting}
 \section{Generování náhodného výběru a grafické ověřování jeho rozdělení:}
 \subsection{Generování náhodného výběru}
+\begin{footnotesize}
+\color{black}
 Vygenerovali jsme n náhodných hodnot z exponencionálního rozdělení pomocí inverzní distribuční funkce \cite{wiki}.
+\end{footnotesize}
+
   \begin{lstlisting}[frame=single]  % Start your code-block
   
 n = K*20
@@ -84,6 +88,10 @@ x=-log(1-u)/L # Exp rozdelení z rovnomerného inverzní distr. fcí.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Vytvoření histogramu}
 \subsubsection{Histogram rovněrně rozdělených náhodných hodnot}
+\begin{footnotesize}
+\color{black}
+Histogram zobrazující náhodně rozdělené rovnoměrné veličiny v rozmezí 0 a 1 je na obrázku číslo \ref{obr:histogram_u}.
+\end{footnotesize}
 \begin{lstlisting}[frame=single]  % Start your code-block
     
 hist(u, freq=FALSE)
@@ -91,7 +99,7 @@ hist(u, freq=FALSE)
 \begin{figure}[h!t]
 	\includegraphics[scale=0.5]{img/histogram_u}\centering
 	\caption{Histogram náhodného rozdělení.}
-	\label{obr:sikme}
+	\label{obr:histogram_u}
 \end{figure}
 
 \subsubsection{Histogram exponenciálního rozdělení}
@@ -133,7 +141,11 @@ abline(0,1, col='red', lwd=2)
 \end{figure}
 
 \subsection{Diskuze kvality vygenerovaných dat}
+\begin{footnotesize}
+\color{black}
 V tomto konkrétním případě lze na pravděpodobnostním papíře pozorovat velké rozdíly v datech u hodnot vetších než $0,26$.
+\end{footnotesize}
+
 \subsection{Test dobé shody}
 Vstup:
  \begin{lstlisting}[frame=single]  % Start your code-block
