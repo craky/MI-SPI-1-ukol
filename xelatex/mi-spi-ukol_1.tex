@@ -7,6 +7,7 @@
 \usepackage{listings}
 \usepackage{color}
 \usepackage[latin2]{inputenc}
+\usepackage{url}
 
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
@@ -73,6 +74,7 @@ L = nchar('Nesrovnal') # prijmeni
 \end{lstlisting}
 \section{Generování náhodného výběru a grafické ověřování jeho rozdělení:}
 \subsection{Generování náhodného výběru}
+Vygenerovali jsme n náhodných hodnot z exponencionálního rozdělení pomocí inverzní distribuční funkce \cite{wiki}.
   \begin{lstlisting}[frame=single]  % Start your code-block
   
 n = K*20
@@ -94,7 +96,7 @@ hist(u, freq=FALSE)
 
 \subsubsection{Histogram exponenciálního rozdělení}
   \begin{lstlisting}[frame=single]  % Start your code-block
-  
+  	
 hist(x, breaks=5*K, freq=FALSE)
 xGrid=seq(min(x)-0.2*xWidth,max(x)+0.2*xWidth,length=n) 
 lines (xGrid,dexp(xGrid, rate=L), col='red') 
@@ -131,6 +133,7 @@ abline(0,1, col='red', lwd=2)
 \end{figure}
 
 \subsection{Diskuze kvality vygenerovaných dat}
+V tomto konkrétním případě lze na pravděpodobnostním papíře pozorovat velké rozdíly v datech u hodnot vetších než $0,26$.
 \subsection{Test dobé shody}
 Vstup:
  \begin{lstlisting}[frame=single]  % Start your code-block
@@ -252,4 +255,12 @@ legend(x=1200,y=150,c("kurýr","pošta"),cex=.8,
 	\caption{Způsoby dodávky za den}
 	\label{obr:sikme}
 \end{figure}
+
+\begin{thebibliography}{1}
+
+\bibitem{wiki}
+Exponential distribution. In: \textit{Wikipedia: the free encyclopedia} [online]. San Francisco (CA): Wikimedia Foundation, 2001- [cit. 2015-04-21]. Dostupné z: \url{http://en.wikipedia.org/wiki/Exponential_distribution\#Generating_exponential_variates}
+
+\end{thebibliography}
+
 \end{document}
