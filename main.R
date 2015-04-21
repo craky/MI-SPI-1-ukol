@@ -116,29 +116,28 @@ lines(day_seq,lambda(day_seq), lwd=3, col='red')
 ############################################################################
 # 3
 kuryr = K/(K+L)                   # Pravděpodobnost, že si vezmou kurýra
-per_minute_kuryr = numeric(24*60) # Vektor uschovávající počet odvozů kurýrem
+za_minutu_kuryr = numeric(day) # Vektor uchovávající počet odvozů kurýrem po minutach
+za_minutu_posta = numeric(day) # Vektor uchovávající počet odvozů poštou po minutach
 
 i = 1                             # Index
 # Cyklus prochází všechny minutové výskyty a spočíta pravděpodobnosti, že zákazník použije kurýra
-while (i<=24*60) {
+while (i<=day) {
   j = 1                           # Index
-  while (j<=per_minute[i]) {
-    rand = runif(1, min=0, max=1) # Náhodná hodnota
+  while (j<=cetnosti_za_minutu[i]) {
+    rand = runif(1, min=0, max=1) # Náhodná hodnota [0,1]
     if (rand < kuryr) {           # S danou pravděpodobností zvolí kurýra
-      per_minute_kuryr[i] = per_minute_kuryr[i] + 1
+      za_minutu_kuryr[i] = za_minutu_kuryr[i] + 1
+    }else{                        # Pokud nezvolí kurýra zvolí si poštu
+      za_minutu_posta[i] = za_minutu_posta[i] + 1
     }
     j = j + 1
   }
   i = i + 1
 }
 
-per_minute_posta = per_minute - per_minute_kuryr  # Jednoduchý doplněk
 
-write(per_minute_kuryr, file = "per_minute_kuryr.txt", ncolumns = 1, append = FALSE)
-write(per_minute_posta, file = "per_minute_posta.txt", ncolumns = 1, append = FALSE)
+plot  (day_seq,za_minutu_posta,    lwd=1, col='grey', type='l') # Vykreslí experimentálně zjištěná data
+lines (day_seq,lambda(day_seq)*(1-kuryr), lwd=3, col='red')            # Přiloží graf teoretické fce
 
-plot  (t,per_minute_posta,    lwd=1, col='grey', type='l') # Vykreslí experimentálně zjištěná data
-lines (t,lambda(t)*(1-kuryr), lwd=3, col='red')            # Přiloží graf teoretické fce
-
-lines (t,per_minute_kuryr, lwd=1, col='grey', type='l')    # Vykreslí experimentálně zjištěná data
-lines (t,lambda(t)*kuryr,  lwd=3, col='blue')              # Přiloží graf teoretické fce
+lines (day_seq,za_minutu_kuryr, lwd=1, col='grey', type='l')    # Vykreslí experimentálně zjištěná data
+lines (day_seq,lambda(day_seq)*kuryr,  lwd=3, col='blue')              # Přiloží graf teoretické fce
