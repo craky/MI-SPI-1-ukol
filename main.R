@@ -166,10 +166,10 @@ plot(day_seq,za_minutu_kuryr,lwd=1,col='lightgreen',type='l',
      main="Způsoby dodávky",
      ylab="Četnosti příchodů objednávek",
      xlab="Čas t v minutách")
-lines(day_seq,lambda(day_seq)*kuryr,lwd=3,col='green')
+lines(day_seq,lambda(day_seq)*vezme_kuryra,lwd=3,col='green')
 lines(day_seq,za_minutu_posta,lwd=1, col='lightpink',type='l')
 # pravdepodovnost, ze vezmou postu je doplnkem k tomu,
 # ze vezmou kuryra
-lines(day_seq,lambda(day_seq)*(1-kuryr),lwd=3,col='red')
+lines(day_seq,lambda(day_seq)*(1-vezme_kuryra),lwd=3,col='red')
 legend(x=1200,y=150,c("kurýr","pošta"),cex=.8, 
        col=c("green","red"),lty=c(1,1))
