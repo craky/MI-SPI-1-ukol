@@ -23,10 +23,11 @@ hypothesisTest = t.test(x, mu=10, conf.level = 1-alpha);
 print(hypothesisTest); # Printing of the result is useful if you
 
 # A
-?qt
+# ?qt
 # kritická hodnota
                                   # parametr lower.tail podle eduxu?
 criticalValue <- qt(.995,n-1);    # moc nechapu proc tam je .995 a ne .99 (mozna kvuli oboustranosti)
+criticalValue
 #Stred interavlu tedy prumer
 xmean <- mean(x);
 #odchylka
@@ -36,6 +37,7 @@ sqrtn <- sqrt(n);
 intv <- criticalValue*stdDev/sqrtn
 
 confint = c(xmean - intv, xmean + intv)
+print(confint)
 print(hypothesisTest$conf.int -confint)
 #neb je to 0 0 tak se zda ze interval mame dobre.
 
@@ -53,8 +55,8 @@ in_interval(mu, confint)
 
 #C I
 testT = (mean(x) - 10)/sqrt(var(x)/(n-1))
-nint=c(-qt(.995, n-1), +qt(.995, n-1))
-in_interval(testT, nint)
+intertvalT=c(-qt(.995, n-1), +qt(.995, n-1))
+in_interval(testT, intertvalT)
 # True takže nEzamítáme.
 
 greater=t.test(x, mu=10, alternative = "greater", conf.level = 1-alpha);
